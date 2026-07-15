@@ -1,11 +1,13 @@
 import json
 import os
 from pathlib import Path
-from typing import Any
+
+DEFAULT_SEARCH_LIMIT = 5
 
 PROJECT_ROOT = Path(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 DATA_PATH = PROJECT_ROOT / "data" / "movies.json"
 STOPWORDS_PATH = PROJECT_ROOT / "data" / "stopwords.txt"
+CACHE_DIR = PROJECT_ROOT / "cache"
 
 
 def load_movies() -> list[dict[str, str | int]]:
