@@ -1,7 +1,13 @@
 import numpy as np
 from sentence_transformers import SentenceTransformer
 
-from .search_utils import CACHE_DIR, DEFAULT_SEARCH_LIMIT, load_movies
+from .search_utils import (
+    CACHE_DIR,
+    DEFAULT_CHUNK_OVERLAP,
+    DEFAULT_CHUNK_SIZE,
+    DEFAULT_SEARCH_LIMIT,
+    load_movies,
+)
 
 
 class SemanticSearch:
@@ -109,6 +115,30 @@ def embed_query_text(query: str):
     print(f"Query: {query}")
     print(f"First 3 dimensions: {embedding[:3]}")
     print(f"Dimensions: {embedding.shape[0]}")
+
+
+def fixed_size_chunking(
+    text: str,
+    chunk_size: int = DEFAULT_CHUNK_SIZE,
+    overlap: int = DEFAULT_CHUNK_OVERLAP,
+):
+    split_text = text.split()
+    chunks = [
+        " ".join(split_text[max(0, i - overlap) : i + chunk_size])
+        for i in range(0, len(split_text), chunk_size)
+    ]
+    return chunks
+
+
+def chunk_text(
+    text: str,
+    chunk_size: int = DEFAULT_CHUNK_SIZE,
+    overlap: int = DEFAULT_CHUNK_OVERLAP,
+):
+    chunks = fixed_size_chunking(text, chunk_size, overlap)
+    print(f"Chunking {len(text)} characters")
+    for i, chunk in enumerate(chunks):
+        print(f"{i + 1}. {chunk}")
 
 
 def cosine_similarity(vec1: np.ndarray, vec2: np.ndarray) -> float:
